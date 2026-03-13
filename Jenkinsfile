@@ -5,19 +5,6 @@ pipeline {
     }
 
     stages {
-
-        stage('Clean Workspace') {
-            steps {
-                deleteDir()
-            }
-        }
-
-        stage('Clone Repository') {
-            steps {
-                git 'https://github.com/hridyen/taskflow_v1.git'
-            }
-        }
-
         stage('Verify Docker') {
             steps {
                 sh 'docker --version'
