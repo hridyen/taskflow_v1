@@ -1,0 +1,30 @@
+services:
+  database:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb-data:/data/db
+
+  backend:
+    build:  
+      context: ./backend
+      dockerfile: ../docker/backend/Dockerfile
+    ports:  
+      - "5000:5000"
+    depends_on:
+      - database
+    environment:
+      - MONGO_URI=mongodb://database:27017/taskdb
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ../docker/frontend/Dockerfile
+    ports:
+      - "82:80"
+    depends_on:
+      - backend
+
+volumes:
+  mongodb-data:
