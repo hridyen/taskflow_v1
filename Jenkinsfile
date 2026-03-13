@@ -4,8 +4,20 @@ pipeline {
         label 'ubuntu-agent'
     }
 
+    parameters {
+        choice(
+            name: 'ACTION',
+            choices: ['DEPLOY', 'STOP'],
+            description: 'Choose what action to perform'
+        )
+    }
+
     stages {
+
         stage('Verify Docker') {
+            when {
+                expression { params.ACTION == 'DEPLOY' }
+            }
             steps {
                 sh 'docker --version'
                 sh 'docker compose version'
@@ -13,26 +25,29 @@ pipeline {
         }
 
         stage('Build Containers') {
+            when {
+                expression { params.ACTION == 'DEPLOY' }
+            }
             steps {
                 sh 'docker compose build'
             }
         }
 
-        stage('Stop Old Containers') {
-            steps {
-                sh 'docker compose down || true'
-            }
-        }
-
         stage('Start Application') {
+            when {
+                expression { params.ACTION == 'DEPLOY' }
+            }
             steps {
                 sh 'docker compose up -d'
             }
         }
 
-        stage('Check Running Containers') {
+        stage('Stop Application') {
+            when {
+                expression { params.ACTION == 'STOP' }
+            }
             steps {
-                sh 'docker ps'
+                sh 'docker compose down'
             }
         }
 
