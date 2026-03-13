@@ -1,6 +1,6 @@
 services:
   database:
-    image: mongo:latest
+    image: mongo:7
     ports:
       - "27017:27017"
     volumes:
@@ -22,7 +22,7 @@ services:
       context: ./frontend
       dockerfile: ../docker/frontend/Dockerfile
     ports:
-      - "82:80"
+      - "83:80"
     depends_on:
       - backend
 
